@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Seamount — Field Tester Program</title>
+<meta name="description" content="A small group of people who go outside and tell us straight if something doesn't work. Seamount Field Testers.">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --black: #060806;
+  --surface: #0a0f0a;
+  --border: #181e18;
+  --border-mid: #243024;
+  --green: #3d6648;
+  --green-dim: #1e3328;
+  --green-bright: #5a9068;
+  --text-primary: #edeae2;
+  --text-mid: #8a8a7e;
+  --text-dim: #3a3a34;
+  --text-faint: #1e221e;
+}
+
+html, body {
+  height: 100%;
+  background: var(--black);
+  color: var(--text-primary);
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Background grid ── */
+.bg {
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(45,80,50,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(45,80,50,0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.bg-glow {
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 60% at 50% 80%, rgba(20,50,25,0.5) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Layout ── */
+.page {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+header {
+  padding: 28px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 0.5px solid var(--border);
+}
+
+.wordmark {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  color: var(--text-primary);
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.header-tag {
+  font-family: 'Space Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 0.2em;
+  color: var(--green);
+  text-transform: uppercase;
+  border: 0.5px solid var(--green-dim);
+  padding: 4px 10px;
+}
+
+/* ── Main content ── */
+main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 40px;
+}
+
+.center-col {
+  width: 100%;
+  max-width: 520px;
+}
+
+/* ── Specimen label (the signature element) ── */
+.specimen-label {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 48px;
+}
+
+.specimen-num {
+  font-family: 'Space Mono', monospace;
+  font-size: 72px;
+  font-weight: 700;
+  color: var(--text-faint);
+  letter-spacing: -0.04em;
+  line-height: 1;
+  user-select: none;
+}
+
+.specimen-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.specimen-title {
+  font-family: 'Space Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 0.22em;
+  color: var(--green);
+  text-transform: uppercase;
+}
+
+.specimen-sub {
+  font-family: 'Space Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 0.15em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+
+/* ── Headline ── */
+.headline {
+  font-family: 'Inter', sans-serif;
+  font-size: 36px;
+  font-weight: 300;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  margin-bottom: 20px;
+  max-width: 440px;
+}
+
+.headline strong {
+  font-weight: 500;
+}
+
+/* ── Body ── */
+.body-text {
+  font-size: 14px;
+  line-height: 1.72;
+  color: var(--text-mid);
+  margin-bottom: 36px;
+  max-width: 420px;
+}
+
+/* ── Form ── */
+.form-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.field-row {
+  display: flex;
+  gap: 0;
+}
+
+.form-input {
+  flex: 1;
+  background: var(--surface);
+  border: 0.5px solid var(--border-mid);
+  color: var(--text-primary);
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 300;
+  padding: 14px 16px;
+  outline: none;
+  border-radius: 0;
+  -webkit-appearance: none;
+  transition: border-color 0.2s;
+}
+
+.form-input::placeholder { color: var(--text-dim); }
+.form-input:focus { border-color: var(--green); }
+
+.form-input.name { border-right: none; }
+
+.form-submit {
+  background: var(--green);
+  border: 0.5px solid var(--green);
+  color: #edeae2;
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 14px 22px;
+  cursor: pointer;
+  transition: background 0.2s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.form-submit:hover { background: #4a7a58; }
+.form-submit:active { background: #2d5038; }
+
+.form-email {
+  background: var(--surface);
+  border: 0.5px solid var(--border-mid);
+  color: var(--text-primary);
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 300;
+  padding: 14px 16px;
+  outline: none;
+  border-radius: 0;
+  -webkit-appearance: none;
+  transition: border-color 0.2s;
+  width: 100%;
+}
+
+.form-email::placeholder { color: var(--text-dim); }
+.form-email:focus { border-color: var(--green); }
+
+.form-note {
+  font-size: 11px;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+
+/* ── Success state ── */
+.success-state {
+  display: none;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.success-num {
+  font-family: 'Space Mono', monospace;
+  font-size: 48px;
+  font-weight: 700;
+  color: var(--green);
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.success-head {
+  font-size: 22px;
+  font-weight: 300;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+
+.success-body {
+  font-size: 13px;
+  line-height: 1.72;
+  color: var(--text-mid);
+  max-width: 380px;
+}
+
+.success-link {
+  display: inline-block;
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--green);
+  text-decoration: none;
+  border-bottom: 0.5px solid var(--green-dim);
+  padding-bottom: 2px;
+  margin-top: 8px;
+  transition: border-color 0.2s;
+}
+
+.success-link:hover { border-color: var(--green); }
+
+/* ── Footer ── */
+footer {
+  padding: 20px 40px;
+  border-top: 0.5px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer-left {
+  font-family: 'Space Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 0.15em;
+  color: var(--text-faint);
+  text-transform: uppercase;
+}
+
+.footer-right {
+  font-family: 'Space Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 0.1em;
+  color: var(--text-faint);
+}
+
+/* ── Scan line decoration ── */
+.scan-line {
+  position: fixed;
+  left: 0; right: 0;
+  height: 0.5px;
+  background: linear-gradient(90deg, transparent, rgba(61,102,72,0.15), transparent);
+  animation: scan-drift 12s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+@keyframes scan-drift { 0% { top: -2px; } 100% { top: 100vh; } }
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  header { padding: 20px 24px; }
+  main { padding: 40px 24px; }
+  footer { padding: 16px 24px; flex-direction: column; gap: 8px; align-items: flex-start; }
+  .headline { font-size: 28px; }
+  .specimen-num { font-size: 52px; }
+  .field-row { flex-direction: column; }
+  .form-input.name { border-right: 0.5px solid var(--border-mid); border-bottom: none; }
+  .form-submit { width: 100%; padding: 14px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scan-line { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="bg"></div>
+<div class="bg-glow"></div>
+<div class="scan-line"></div>
+
+<div class="page">
+  <header>
+    <a href="#" class="wordmark">Seamount</a>
+    <span class="header-tag">Field Tester Program</span>
+  </header>
+
+  <main>
+    <div class="center-col">
+
+      <div class="specimen-label">
+        <div class="specimen-num">FT</div>
+        <div class="specimen-meta">
+          <div class="specimen-title">Field Tester</div>
+          <div class="specimen-sub">Application open</div>
+        </div>
+      </div>
+
+      <h1 class="headline">Nature doesn't need you.<br><strong>You need it anyway.</strong></h1>
+
+      <p class="body-text">
+        We're building a small group of people who spend real time outside and will tell us straight when something doesn't work. Early access to what we make. Occasional look behind the scenes. First call when we need something tested in real conditions.
+      </p>
+
+      <!-- Form -->
+      <div id="form-section">
+        <form class="form-wrap" id="signup-form" onsubmit="handleSubmit(event)">
+          <div class="field-row">
+            <input class="form-input name" type="text" id="name-input" name="name" placeholder="Your name" autocomplete="given-name" required>
+            <button class="form-submit" type="submit" id="submit-btn">Join the list</button>
+          </div>
+          <input class="form-email" type="email" id="email-input" name="email" placeholder="Your email address" autocomplete="email" required>
+          <p class="form-note">No noise. We write when there's something worth saying.</p>
+        </form>
+      </div>
+
+      <!-- Success -->
+      <div class="success-state" id="success-section">
+        <div class="success-num" id="success-num">FT-001</div>
+        <div class="success-head">You're on the list.</div>
+        <div class="success-body">
+          We'll be in touch soon with everything you need to know. In the meantime — go outside.
+        </div>
+        <a href="seamount-field-tester-welcome.html" class="success-link" id="welcome-link">Enter the Field Tester area</a>
+      </div>
+
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-left">Seamount Project · Field Tester Program</div>
+    <div class="footer-right">The lab is out there.</div>
+  </footer>
+</div>
+
+<script>
+// Simple counter stored in localStorage so each submission gets a unique number
+// In production replace this with your Google Form / Formspree endpoint
+
+function getNextNumber() {
+  const current = parseInt(localStorage.getItem('sm_ft_count') || '0', 10);
+  const next = current + 1;
+  localStorage.setItem('sm_ft_count', next);
+  return next;
+}
+
+function handleSubmit(e) {
+  e.preventDefault();
+  const name  = document.getElementById('name-input').value.trim();
+  const email = document.getElementById('email-input').value.trim();
+  const btn   = document.getElementById('submit-btn');
+
+  btn.textContent = 'Sending…';
+  btn.disabled = true;
+
+  // ── Replace this block with your actual form endpoint ──
+  // Option A: Formspree
+  //   fetch('https://formspree.io/f/YOUR_FORM_ID', {
+  //     method: 'POST',
+  //     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+  //     body: JSON.stringify({ name, email })
+  //   }).then(showSuccess).catch(() => { btn.textContent = 'Try again'; btn.disabled = false; });
+
+  // Option B: Google Forms (replace action URL)
+  //   const fd = new FormData();
+  //   fd.append('entry.XXXXXXX', name);
+  //   fd.append('entry.YYYYYYY', email);
+  //   fetch('https://docs.google.com/forms/d/e/YOUR_FORM_ID/formResponse', { method:'POST', body:fd, mode:'no-cors' })
+  //     .then(showSuccess);
+
+  // ── Demo: simulate a short delay then show success ──
+  setTimeout(showSuccess, 800);
+}
+
+function showSuccess() {
+  const n = getNextNumber();
+  const padded = 'FT-' + String(n).padStart(3, '0');
+
+  document.getElementById('form-section').style.display = 'none';
+  const s = document.getElementById('success-section');
+  s.style.display = 'flex';
+  document.getElementById('success-num').textContent = padded;
+}
+</script>
+</body>
+</html>
