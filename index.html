@@ -430,23 +430,14 @@ function handleSubmit(e) {
   btn.textContent = 'Sending…';
   btn.disabled = true;
 
-  // ── Replace this block with your actual form endpoint ──
-  // Option A: Formspree
-  //   fetch('https://formspree.io/f/YOUR_FORM_ID', {
-  //     method: 'POST',
-  //     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-  //     body: JSON.stringify({ name, email })
-  //   }).then(showSuccess).catch(() => { btn.textContent = 'Try again'; btn.disabled = false; });
-
-  // Option B: Google Forms (replace action URL)
-  //   const fd = new FormData();
-  //   fd.append('entry.XXXXXXX', name);
-  //   fd.append('entry.YYYYYYY', email);
-  //   fetch('https://docs.google.com/forms/d/e/YOUR_FORM_ID/formResponse', { method:'POST', body:fd, mode:'no-cors' })
-  //     .then(showSuccess);
-
-  // ── Demo: simulate a short delay then show success ──
-  setTimeout(showSuccess, 800);
+  const fd = new FormData();
+  fd.append('entry.166510064', name);
+  fd.append('entry.908785507', email);
+  fetch('https://docs.google.com/forms/d/e/1FAIpQLScsgewhQfKqhAEVmU3c52RbqonVSMeZxEVIJIFbwHCFvbsveA/formResponse', {
+    method: 'POST',
+    body: fd,
+    mode: 'no-cors'
+  }).then(showSuccess).catch(showSuccess);
 }
 
 function showSuccess() {
