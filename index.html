@@ -4,451 +4,364 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Seamount — Field Tester Program</title>
-<meta name="description" content="A small group of people who go outside and tell us straight if something doesn't work. Seamount Field Testers.">
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Funnel+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Funnel+Display:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --black: #060806;
-  --surface: #0a0f0a;
-  --border: #181e18;
-  --border-mid: #243024;
-  --green: #3d6648;
-  --green-dim: #1e3328;
-  --green-bright: #5a9068;
-  --text-primary: #edeae2;
-  --text-mid: #8a8a7e;
-  --text-dim: #3a3a34;
-  --text-faint: #1e221e;
+  --paper: #f0ede6;
+  --ink: #181816;
+  --ink-mid: #5a5a52;
+  --ink-dim: #9a9a8e;
+  --ink-faint: #ccc8be;
+  --border: #d8d4ca;
+  --green: #2e4a2e;
 }
 
 html, body {
-  height: 100%;
-  background: var(--black);
-  color: var(--text-primary);
-  font-family: 'Inter', sans-serif;
+  min-height: 100%;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Funnel Sans', sans-serif;
   font-weight: 300;
   -webkit-font-smoothing: antialiased;
 }
 
 body {
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
 }
 
-/* ── Background grid ── */
-.bg {
-  position: fixed;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(45,80,50,0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(45,80,50,0.04) 1px, transparent 1px);
-  background-size: 48px 48px;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.bg-glow {
-  position: fixed;
-  inset: 0;
-  background:
-    radial-gradient(ellipse 70% 60% at 50% 80%, rgba(20,50,25,0.5) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* ── Layout ── */
-.page {
-  position: relative;
-  z-index: 1;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
+/* ── Header ── */
 header {
   padding: 28px 40px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 0.5px solid var(--border);
+  border-bottom: 1px solid var(--border);
 }
 
 .wordmark {
-  font-family: 'Space Mono', monospace;
-  font-size: 11px;
+  font-family: 'Funnel Sans', sans-serif;
+  font-size: 13px;
   font-weight: 700;
-  letter-spacing: 0.22em;
-  color: var(--text-primary);
+  letter-spacing: 0.26em;
   text-transform: uppercase;
+  color: var(--ink);
   text-decoration: none;
 }
 
-.header-tag {
-  font-family: 'Space Mono', monospace;
-  font-size: 8px;
-  letter-spacing: 0.2em;
-  color: var(--green);
+.header-meta {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--ink-dim);
   text-transform: uppercase;
-  border: 0.5px solid var(--green-dim);
-  padding: 4px 10px;
 }
 
-/* ── Main content ── */
+/* ── Main ── */
 main {
-  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 0;
+}
+
+/* ── Left: editorial text zone ── */
+.left {
+  padding: 64px 48px 64px 40px;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 60px 40px;
+  flex-direction: column;
+  justify-content: space-between;
+  border-right: 1px solid var(--border);
 }
 
-.center-col {
-  width: 100%;
-  max-width: 520px;
+.left-top {}
+
+/* Ref image 2 — large bold type as visual element */
+.big-label {
+  font-family: 'Funnel Sans', sans-serif;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-bottom: 20px;
 }
 
-/* ── Specimen label (the signature element) ── */
-.specimen-label {
-  display: flex;
-  align-items: baseline;
-  gap: 12px;
-  margin-bottom: 48px;
-}
-
-.specimen-num {
-  font-family: 'Space Mono', monospace;
-  font-size: 72px;
-  font-weight: 700;
-  color: var(--text-faint);
-  letter-spacing: -0.04em;
+.big-number {
+  font-family: 'Funnel Display', sans-serif;
+  font-size: 120px;
+  font-weight: 300;
   line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--border);
+  margin-bottom: 32px;
   user-select: none;
 }
 
-.specimen-meta {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.specimen-title {
-  font-family: 'Space Mono', monospace;
-  font-size: 8px;
-  letter-spacing: 0.22em;
-  color: var(--green);
-  text-transform: uppercase;
-}
-
-.specimen-sub {
-  font-family: 'Space Mono', monospace;
-  font-size: 8px;
-  letter-spacing: 0.15em;
-  color: var(--text-dim);
-  text-transform: uppercase;
-}
-
-/* ── Headline ── */
 .headline {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Funnel Sans', sans-serif;
   font-size: 36px;
   font-weight: 300;
-  line-height: 1.15;
   letter-spacing: -0.02em;
-  color: var(--text-primary);
+  line-height: 1.1;
+  color: var(--ink);
   margin-bottom: 20px;
-  max-width: 440px;
 }
 
-.headline strong {
-  font-weight: 500;
-}
-
-/* ── Body ── */
 .body-text {
   font-size: 14px;
-  line-height: 1.72;
-  color: var(--text-mid);
-  margin-bottom: 36px;
-  max-width: 420px;
+  line-height: 1.74;
+  color: var(--ink-mid);
+  max-width: 340px;
+  font-weight: 300;
 }
 
-/* ── Form ── */
-.form-wrap {
+/* Coordinate block — ref image 1 */
+.left-bottom {
+  padding-top: 40px;
+  border-top: 1px solid var(--border);
+}
+
+.coord-block {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.coord-line {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+}
+
+/* ── Right: form zone ── */
+.right {
+  padding: 64px 40px 64px 48px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Form — no box, just fields */
+.form-group {
+  margin-bottom: 40px;
+}
+
+.form-field {
+  position: relative;
+  margin-bottom: 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.form-field + .form-field {
+  border-top: none;
+}
+
+.form-field label {
+  display: block;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  padding: 16px 0 0;
+}
+
+.form-field input {
+  display: block;
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: var(--ink);
+  font-family: 'Funnel Sans', sans-serif;
+  font-size: 17px;
+  font-weight: 300;
+  padding: 6px 0 16px;
+  outline: none;
+  letter-spacing: -0.01em;
+}
+
+.form-field input::placeholder { color: var(--ink-faint); }
+
+/* Submit — ref image 3: large, sparse, confident */
+.form-submit {
+  display: block;
+  width: 100%;
+  background: var(--ink);
+  border: none;
+  color: var(--paper);
+  font-family: 'Funnel Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  padding: 18px 24px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.2s;
+  margin-bottom: 16px;
+}
+
+.form-submit:hover { background: var(--green); }
+.form-submit:disabled { background: var(--ink-dim); cursor: wait; }
+
+.form-note {
+  font-size: 11px;
+  color: var(--ink-faint);
+  line-height: 1.6;
+  font-weight: 300;
+}
+
+/* Right bottom — what's included, terse */
+.program-meta {
+  margin-top: 56px;
+  padding-top: 28px;
+  border-top: 1px solid var(--border);
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.field-row {
+.meta-item {
   display: flex;
-  gap: 0;
-}
-
-.form-input {
-  flex: 1;
-  background: var(--surface);
-  border: 0.5px solid var(--border-mid);
-  color: var(--text-primary);
-  font-family: 'Inter', sans-serif;
-  font-size: 13px;
-  font-weight: 300;
-  padding: 14px 16px;
-  outline: none;
-  border-radius: 0;
-  -webkit-appearance: none;
-  transition: border-color 0.2s;
-}
-
-.form-input::placeholder { color: var(--text-dim); }
-.form-input:focus { border-color: var(--green); }
-
-.form-input.name { border-right: none; }
-
-.form-submit {
-  background: var(--green);
-  border: 0.5px solid var(--green);
-  color: #edeae2;
-  font-family: 'Space Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  padding: 14px 22px;
-  cursor: pointer;
-  transition: background 0.2s;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-.form-submit:hover { background: #4a7a58; }
-.form-submit:active { background: #2d5038; }
-
-.form-email {
-  background: var(--surface);
-  border: 0.5px solid var(--border-mid);
-  color: var(--text-primary);
-  font-family: 'Inter', sans-serif;
-  font-size: 13px;
-  font-weight: 300;
-  padding: 14px 16px;
-  outline: none;
-  border-radius: 0;
-  -webkit-appearance: none;
-  transition: border-color 0.2s;
-  width: 100%;
-}
-
-.form-email::placeholder { color: var(--text-dim); }
-.form-email:focus { border-color: var(--green); }
-
-.form-note {
-  font-size: 11px;
-  color: var(--text-dim);
-  line-height: 1.6;
-}
-
-/* ── Success state ── */
-.success-state {
-  display: none;
-  flex-direction: column;
+  justify-content: space-between;
+  align-items: baseline;
   gap: 16px;
 }
 
-.success-num {
-  font-family: 'Space Mono', monospace;
-  font-size: 48px;
-  font-weight: 700;
-  color: var(--green);
-  letter-spacing: -0.03em;
-  line-height: 1;
-}
-
-.success-head {
-  font-size: 22px;
+.meta-key {
+  font-size: 11px;
+  color: var(--ink-mid);
   font-weight: 300;
-  color: var(--text-primary);
-  letter-spacing: -0.01em;
-  line-height: 1.3;
 }
 
-.success-body {
-  font-size: 13px;
-  line-height: 1.72;
-  color: var(--text-mid);
-  max-width: 380px;
+.meta-val {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--ink);
+  text-align: right;
 }
-
-.success-link {
-  display: inline-block;
-  font-family: 'Space Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--green);
-  text-decoration: none;
-  border-bottom: 0.5px solid var(--green-dim);
-  padding-bottom: 2px;
-  margin-top: 8px;
-  transition: border-color 0.2s;
-}
-
-.success-link:hover { border-color: var(--green); }
 
 /* ── Footer ── */
 footer {
-  padding: 20px 40px;
-  border-top: 0.5px solid var(--border);
+  padding: 16px 40px;
+  border-top: 1px solid var(--border);
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.footer-left {
-  font-family: 'Space Mono', monospace;
-  font-size: 8px;
-  letter-spacing: 0.15em;
-  color: var(--text-faint);
+.footer-text {
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  color: var(--ink-faint);
   text-transform: uppercase;
 }
 
-.footer-right {
-  font-family: 'Space Mono', monospace;
-  font-size: 8px;
-  letter-spacing: 0.1em;
-  color: var(--text-faint);
-}
-
-/* ── Scan line decoration ── */
-.scan-line {
-  position: fixed;
-  left: 0; right: 0;
-  height: 0.5px;
-  background: linear-gradient(90deg, transparent, rgba(61,102,72,0.15), transparent);
-  animation: scan-drift 12s linear infinite;
-  pointer-events: none;
-  z-index: 0;
-}
-@keyframes scan-drift { 0% { top: -2px; } 100% { top: 100vh; } }
-
 /* ── Responsive ── */
-@media (max-width: 600px) {
-  header { padding: 20px 24px; }
-  main { padding: 40px 24px; }
-  footer { padding: 16px 24px; flex-direction: column; gap: 8px; align-items: flex-start; }
+@media (max-width: 700px) {
+  header { padding: 20px 20px; }
+  main { grid-template-columns: 1fr; }
+  .left { padding: 48px 20px; border-right: none; border-bottom: 1px solid var(--border); }
+  .big-number { font-size: 80px; }
   .headline { font-size: 28px; }
-  .specimen-num { font-size: 52px; }
-  .field-row { flex-direction: column; }
-  .form-input.name { border-right: 0.5px solid var(--border-mid); border-bottom: none; }
-  .form-submit { width: 100%; padding: 14px; }
+  .right { padding: 48px 20px; }
+  footer { padding: 14px 20px; flex-direction: column; gap: 6px; align-items: flex-start; }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .scan-line { display: none; }
-}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
 </head>
 <body>
 
-<div class="bg"></div>
-<div class="bg-glow"></div>
-<div class="scan-line"></div>
+<header>
+  <a href="#" class="wordmark">Seamount</a>
+  <span class="header-meta">Field Tester Program · West Europe</span>
+</header>
 
-<div class="page">
-  <header>
-    <a href="#" class="wordmark">Seamount</a>
-    <span class="header-tag">Field Tester Program</span>
-  </header>
-
-  <main>
-    <div class="center-col">
-
-      <div class="specimen-label">
-        <div class="specimen-num">FT</div>
-        <div class="specimen-meta">
-          <div class="specimen-title">Field Tester</div>
-          <div class="specimen-sub">Application open</div>
-        </div>
-      </div>
-
-      <h1 class="headline">Nature doesn't need you.<br><strong>You need it anyway.</strong></h1>
-
+<main>
+  <div class="left">
+    <div class="left-top">
+      <p class="big-label">Field Tester Program</p>
+      <div class="big-number">FT</div>
+      <h1 class="headline">Join the people who go outside and tell us straight.</h1>
       <p class="body-text">
-        We're building a small group of people who spend real time outside and will tell us straight when something doesn't work. Early access to what we make. Occasional look behind the scenes. First call when we need something tested in real conditions.
+        A small group of people with early access to what we make, a look behind the scenes, and first call when we need gear tested in real conditions.
       </p>
-
-      <!-- Form -->
-      <div id="form-section">
-        <form class="form-wrap" id="signup-form" onsubmit="handleSubmit(event)">
-          <div class="field-row">
-            <input class="form-input name" type="text" id="name-input" name="name" placeholder="Your name" autocomplete="given-name" required>
-            <button class="form-submit" type="submit" id="submit-btn">Join the list</button>
-          </div>
-          <input class="form-email" type="email" id="email-input" name="email" placeholder="Your email address" autocomplete="email" required>
-          <p class="form-note">No noise. We write when there's something worth saying.</p>
-        </form>
-      </div>
-
-      <!-- Success -->
-      <div class="success-state" id="success-section">
-        <div class="success-num" id="success-num">FT-001</div>
-        <div class="success-head">You're on the list.</div>
-        <div class="success-body">
-          We'll be in touch soon with everything you need to know. In the meantime — go outside.
-        </div>
-        <a href="seamount-field-tester-welcome.html" class="success-link" id="welcome-link">Enter the Field Tester area</a>
-      </div>
-
     </div>
-  </main>
+    <div class="left-bottom">
+      <div class="coord-block">
+        <span class="coord-line">Program · West Europe</span>
+        <span class="coord-line">Challenges · 8 open</span>
+        <span class="coord-line">Invitations per member · 2</span>
+      </div>
+    </div>
+  </div>
 
-  <footer>
-    <div class="footer-left">Seamount Project · Field Tester Program</div>
-    <div class="footer-right">The lab is out there.</div>
-  </footer>
-</div>
+  <div class="right">
+    <form id="signup-form" onsubmit="handleSubmit(event)">
+      <div class="form-group">
+        <div class="form-field">
+          <label for="name-input">Name</label>
+          <input type="text" id="name-input" name="name" placeholder="Your name" autocomplete="given-name" required>
+        </div>
+        <div class="form-field">
+          <label for="email-input">Email</label>
+          <input type="email" id="email-input" name="email" placeholder="your@email.com" autocomplete="email" required>
+        </div>
+      </div>
+      <button class="form-submit" type="submit" id="submit-btn">Join the list</button>
+      <p class="form-note">No newsletters. We write when there's something worth saying.</p>
+    </form>
+
+    <div class="program-meta">
+      <div class="meta-item">
+        <span class="meta-key">Early access to new products</span>
+        <span class="meta-val">✓</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-key">Behind the scenes updates</span>
+        <span class="meta-val">✓</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-key">Prototype testing</span>
+        <span class="meta-val">✓</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-key">Field challenges · West Europe</span>
+        <span class="meta-val">8 open</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-key">Invitations to share</span>
+        <span class="meta-val">2</span>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <span class="footer-text">Seamount Project</span>
+  <span class="footer-text">The lab is out there.</span>
+</footer>
 
 <script>
-// Simple counter stored in localStorage so each submission gets a unique number
-// In production replace this with your Google Form / Formspree endpoint
-
-function getNextNumber() {
-  const current = parseInt(localStorage.getItem('sm_ft_count') || '0', 10);
-  const next = current + 1;
-  localStorage.setItem('sm_ft_count', next);
-  return next;
-}
-
 function handleSubmit(e) {
   e.preventDefault();
   const name  = document.getElementById('name-input').value.trim();
   const email = document.getElementById('email-input').value.trim();
   const btn   = document.getElementById('submit-btn');
-
   btn.textContent = 'Sending…';
   btn.disabled = true;
-
   const fd = new FormData();
   fd.append('entry.166510064', name);
   fd.append('entry.908785507', email);
   fetch('https://docs.google.com/forms/d/e/1FAIpQLScsgewhQfKqhAEVmU3c52RbqonVSMeZxEVIJIFbwHCFvbsveA/formResponse', {
-    method: 'POST',
-    body: fd,
-    mode: 'no-cors'
-  }).then(showSuccess).catch(showSuccess);
+    method: 'POST', body: fd, mode: 'no-cors'
+  }).then(go).catch(go);
 }
-
-function showSuccess() {
-  const n = getNextNumber();
-  const padded = 'FT-' + String(n).padStart(3, '0');
-
-  document.getElementById('form-section').style.display = 'none';
-  const s = document.getElementById('success-section');
-  s.style.display = 'flex';
-  document.getElementById('success-num').textContent = padded;
-}
+function go() { window.location.href = 'seamount-field-tester-welcome.html'; }
 </script>
 </body>
 </html>
